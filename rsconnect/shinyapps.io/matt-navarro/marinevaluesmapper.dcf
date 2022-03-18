@@ -1,0 +1,14 @@
+name: marinevaluesmapper
+title: marinevaluesmapper
+username:
+account: matt-navarro
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5440529
+bundleId: 5513144
+url: https://matt-navarro.shinyapps.io/marinevaluesmapper/
+when: 1643261836.60333
+lastSyncTime: 1643261836.60333
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: images/boating-banner.jpg|images/diving-banner.jpg|images/fishing-banner.jpg|images/Presentation1.pptx|images/snorkeling-banner.jpg

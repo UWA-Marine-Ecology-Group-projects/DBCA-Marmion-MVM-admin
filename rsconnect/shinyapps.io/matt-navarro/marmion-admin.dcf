@@ -1,0 +1,13 @@
+name: marmion-admin
+title: marmion-admin
+username:
+account: matt-navarro
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5753929
+bundleId: 5627483
+url: https://marine-ecology.shinyapps.io/marmion-admin/
+when: 1646106732.36872
+lastSyncTime: 1646106732.36872
+asMultiple: FALSE
+asStatic: FALSE
