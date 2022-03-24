@@ -90,7 +90,7 @@ days <- read.csv("data/days-scale.csv") %>%
   dplyr::select(days, mean)
 
 # read in matrix q's ----
-matrix <- read.csv("data/Activity list - questions.csv") %>%
+matrix <- read.csv("data/marmion_activitylist - questions.csv", na.strings=c("","NA")) %>%
   rename(value = response.items.for.matrix.only)
 
 q.9 <- matrix %>%
@@ -103,8 +103,7 @@ q.11 <- matrix %>%
   filter(question.number == 11)
 
 ## Read in activity list (downloaded from Googledrive) ----
-activities <- read.csv("data/Activity list - current.activity.list_mn10.01.2022.csv", na.strings=c("","NA")) %>%
-  select(-c(Comments))
+activities <- read.csv("data/marmion_activitylist - activity-list.csv", na.strings=c("","NA"))
 
 # Create a list of the subcategories for the accordion ----
 activity.list <- activities %>%
@@ -368,12 +367,12 @@ options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.siz
 # save(postcodes.single, file = "spatial/postcodes.single.rda")
 
 # Read in spatial files ----
-load("spatial/grid.2km.rda")
+load("spatial/grid.1km.rda")
 load("spatial/postcodes.rda")
 load("spatial/postcodes.single.rda")
 
 # Grids for spatial questions ----
-SpP <- SpatialPolygons(grid.2km@polygons)
+SpP <- SpatialPolygons(grid.1km@polygons)
 
 SpP = SpatialPolygonsDataFrame(
   SpP,
