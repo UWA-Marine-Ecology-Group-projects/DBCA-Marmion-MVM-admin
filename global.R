@@ -43,6 +43,7 @@ library(ggplot2)
 library(dplyr) # load last to stop issues with plyr 
 library(profvis)
 library(GlobalArchive)
+library(maptools)
 
 ## Google drive Authentication ----
 gs4_auth(cache = "secrets", email = TRUE)
