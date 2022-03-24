@@ -129,7 +129,7 @@ h3 {
                   valueBoxOutput("socialbox", width = 3),
                   valueBoxOutput("emailbox", width = 3),
                   valueBoxOutput("websitebox", width = 3),
-                  valueBoxOutput("launchbox", width = 3),
+                  valueBoxOutput("facebox", width = 3),
                   
                   box(width = 12,
                       title = "Number of responses over time and by source:",
@@ -141,7 +141,8 @@ h3 {
                   box(width = 12,
                       title = "Filter data by source:",
                       status = "primary",
-                      uiOutput("sourceui")),
+                      uiOutput("sourceui"),
+                      actionButton("go", "Start plotting!")),
                   
                   box(width = 12,
                       title = "Users by postcode:",
@@ -257,6 +258,28 @@ h3 {
                   downloadBttn(
                     outputId = "downloadmatrix",
                     "Download matrix responses",
+                    style = "unite",
+                    color = "primary"
+                  ),
+                  # Download shapefiles
+                  
+                  downloadBttn(
+                    outputId = "downloadactivityshp",
+                    "Download activities shapefiles",
+                    style = "unite",
+                    color = "primary"
+                  ),
+                  
+                  downloadBttn(
+                    outputId = "downloadvalueshp",
+                    "Download values shapefiles",
+                    style = "unite",
+                    color = "primary"
+                  ),
+                  
+                  downloadBttn(
+                    outputId = "downloadpressureshp",
+                    "Download pressures shapefiles",
                     style = "unite",
                     color = "primary"
                   )),
