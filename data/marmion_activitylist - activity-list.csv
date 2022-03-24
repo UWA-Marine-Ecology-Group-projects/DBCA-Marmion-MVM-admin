@@ -1,0 +1,125 @@
+Category,Sub category,Activity,cat_num,sub_num
+Recreational fishing,Boat - line fishing,"Nearshore fish (e.g., whiting, herring)",1,1
+Recreational fishing,Boat - line fishing,Pelagic fish,1,1
+Recreational fishing,Boat - line fishing,Demersal fish,1,1
+Recreational fishing,Boat - line fishing,Squid,1,1
+Recreational fishing,Boat - scuba or freedive,Spear fishing,1,2
+Recreational fishing,Boat - scuba or freedive,Rock lobster collection,1,2
+Recreational fishing,Boat - scuba or freedive,Abalone collection,1,2
+Recreational fishing,Boat - pots or nets,Rock lobster pots,1,3
+Recreational fishing,Boat - pots or nets,Drop nets,1,3
+Recreational fishing,Boat - pots or nets,Octopus pots,1,3
+Recreational fishing,Shore-based fishing,Jetty - Rod and line,1,4
+Recreational fishing,Shore-based fishing,Jetty - Drop nets,1,4
+Recreational fishing,Shore-based fishing,Rock - Rod and line,1,4
+Recreational fishing,Shore-based fishing,Beach - Rod and line,1,4
+Recreational fishing,Shore-based fishing,Abalone collection,1,4
+Recreational fishing,Shore-based fishing,Spear fishing,1,4
+Recreational fishing,Shore-based fishing,Rock lobster collection (scuba or freedive),1,4
+Recreation - non-fishing,Motorised water sports,Jet skiing,2,1
+Recreation - non-fishing,Motorised water sports,Boating,2,1
+Recreation - non-fishing,Motorised water sports,Water skiing,2,1
+Recreation - non-fishing,Non-motorised water sports,Sailing,2,2
+Recreation - non-fishing,Non-motorised water sports,Surfing or paddle boarding,2,2
+Recreation - non-fishing,Non-motorised water sports,Kayaking,2,2
+Recreation - non-fishing,Non-motorised water sports,Wind or kite surfing,2,2
+Recreation - non-fishing,Swimming or snorkeling or scuba,Swimming (shore),2,3
+Recreation - non-fishing,Swimming or snorkeling or scuba,Swimming (boat),2,3
+Recreation - non-fishing,Swimming or snorkeling or scuba,Snorkeling (shore),2,3
+Recreation - non-fishing,Swimming or snorkeling or scuba,Snorkeling (boat),2,3
+Recreation - non-fishing,Swimming or snorkeling or scuba,Scuba (shore),2,3
+Recreation - non-fishing,Swimming or snorkeling or scuba,Scuba (boat),2,3
+Recreation - non-fishing,Wildlife watching,Whale watching,2,4
+Recreation - non-fishing,Wildlife watching,Bird watching,2,4
+Recreation - non-fishing,Wildlife watching,Seal or sea lion watching,2,4
+Recreation - non-fishing,Other shore or land-based activities,Off road vehicle,2,5
+Recreation - non-fishing,Other shore or land-based activities,Horse riding,2,5
+Recreation - non-fishing,Other shore or land-based activities,Walking or running,2,5
+Recreation - non-fishing,Other shore or land-based activities,Beach combing,2,5
+Recreation - non-fishing,Other shore or land-based activities,Dog walking,2,5
+Recreation - non-fishing,Other shore or land-based activities,Photography,2,5
+Commercial fishing,West Coast Rock Lobster Managed Fishery,Lobster pots,3,1
+Commercial fishing,Abalone Managed Fishery,Hand collection - diving,3,2
+Commercial fishing,Abalone Managed Fishery,Hand collection - wading,3,2
+Commercial fishing,Marine Aquarium Managed Fishery,Diving,3,3
+Commercial fishing,Marine Aquarium Managed Fishery,Surface supplied air,3,3
+Commercial fishing,Octopus Interim Managed Fishery,Unbaited (shelter) pot,3,4
+Commercial fishing,Octopus Interim Managed Fishery,Trigger trap,3,4
+Commercial fishing,South West Trawl Managed Fishery,Demersal otter trawl nets,3,5
+Commercial fishing,Specimen Shell Managed Fishery,Diving,3,6
+Commercial fishing,Specimen Shell Managed Fishery,Wading,3,6
+Commercial fishing,West Coast Purse Seine Managed Fishery,Purse seine nets,3,7
+Commercial fishing,Mackerel Managed Fishery,Hand line,3,8
+Commercial fishing,Mackerel Managed Fishery,Troll line,3,8
+Commercial fishing,South West Coast Salmon ,South West Coast Salmon,3,9
+Commercial fishing,West Coast (Beach and Bait Fish Net) Managed Fishery,Beach seine nets,3,10
+Commercial fishing,West Coast (Beach and Bait Fish Net) Managed Fishery,Purse seine nets,3,10
+Commercial tour operator,Nature-based eco-tourism,Scenic site,4,1
+Commercial tour operator,Nature-based eco-tourism,Swimming,4,1
+Commercial tour operator,Nature-based eco-tourism,Wildlife viewing,4,1
+Commercial tour operator,Nature-based eco-tourism,Maritime heritage site,4,1
+Commercial tour operator,Charter fishing,Fishing site,4,2
+Commercial tour operator,Anchorages and landings,Anchorage,4,3
+Commercial tour operator,Anchorages and landings,Beach landings,4,3
+Commercial tour operator,Anchorages and landings,Moorings,4,3
+Commercial tour operator,Anchorages and landings,Fuel drop-offs,4,3
+Environmental activities,Education,School based monitoring,5,1
+Environmental activities,Science or research,Monitoring or field survey,5,2
+Environmental activities,Science or research,Experiment or tagging,5,2
+Environmental activities,Science or research,Marine debris survey,5,2
+Environmental activities,Volunteer work,Community monitoring,5,3
+Environmental activities,Volunteer work,Weed control,5,3
+Environmental activities,Volunteer work,Beach clean up,5,3
+Environmental activities,Volunteer work,Marine debris survey,5,3
+Local knowledge,Unique or unusual feature,,6,1
+Local knowledge,Key or Iconic species,,6,2
+Local knowledge,Rare or threatened species,,6,3
+Local knowledge,Vulnerable habitat,,6,4
+Local knowledge,Aggregation area,,6,5
+Local knowledge,Nursery or juvenile area,,6,6
+Local knowledge,Nesting area,,6,7
+Local knowledge,"Breeding, mating or spawning area",,6,8
+Local knowledge,Resting or haul out area,,6,9
+Local knowledge,Migratory species resting area,,6,10
+Local knowledge,Natural or minimally disturbed area,,6,11
+Local knowledge,Area with high habitat diversity,,6,12
+Local knowledge,Important area for climate change resilience,,6,13
+Local knowledge,Daily movement pathway (for shelter or feeding),,6,14
+Other,Other 1,,7,1
+Other,Other 2,,7,2
+Other,Other 3,,7,3
+Other,Other 4,,7,4
+Other,Other 5,,7,5
+Pressures and threats,Rubbish - land based,Litter,8,1
+Pressures and threats,Rubbish - marine based,Litter,8,2
+Pressures and threats,Rubbish - marine based,Nets and/or floats,8,2
+Pressures and threats,Rubbish - marine based,Fishing tackle and bait bags,8,2
+Pressures and threats,Rubbish - marine based,Marine animal entanglement,8,2
+Pressures and threats,Water pollution - land based,Run-off from urban areas or farms,8,3
+Pressures and threats,Water pollution - marine based,Fuel and oil,8,4
+Pressures and threats,Water pollution - marine based,Sewage,8,4
+Pressures and threats,Water pollution - marine based,Ballast/bilge water discharge,8,4
+Pressures and threats,Water pollution - marine based,Anti-fouling paint and other chemicals,8,4
+Pressures and threats,Inappropriate visitation,Physical damage to areas,8,5
+Pressures and threats,Inappropriate visitation,Graffiti,8,5
+Pressures and threats,Inappropriate visitation,Trampling,8,5
+Pressures and threats,Inappropriate visitation,Camping in unsuitable places,8,5
+Pressures and threats,Inappropriate visitation,Disturbing wildlife,8,5
+Pressures and threats,Dredging,Dredging,8,6
+Pressures and threats,Climate change,"Sea level rise, erosion",8,7
+Pressures and threats,Fishing,Commercial fishing,8,8
+Pressures and threats,Fishing,Recreational fishing,8,8
+Pressures and threats,Aquaculture,Land based (coastal),8,9
+Pressures and threats,Aquaculture,Marine based,8,9
+Pressures and threats,Boating,Anchoring/propellor scour damage,8,10
+Pressures and threats,Boating,Speed/wake wash damage,8,10
+Pressures and threats,Boating,Disturbing wildlife,8,10
+Pressures and threats,Boating,Boat strike to animals,8,10
+Pressures and threats,Introduced marine pests,Introduced marine pests,8,11
+Pressures and threats,Introduced/domestic animals,Damage through trampling or erosion,8,12
+Pressures and threats,Introduced/domestic animals,Pollution,8,12
+Pressures and threats,Introduced/domestic animals,Predation or disturbance to wildlife,8,12
+Pressures and threats,Coastal erosion,Coastal erosion,8,13
+Pressures and threats,Development,Development,8,14
+Pressures and threats,Wildfire,Wildfire,8,15
+Pressures and threats,Weeds,Weeds,8,16
