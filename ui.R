@@ -30,7 +30,7 @@ secure_app(function(request) {
     '))),
       tags$script(HTML('
       $(document).ready(function() {
-        $("header").find("nav").append(\'<span class="myClass">  <b> South Coast Marine Values Mapper (Admin)</b> </span>\');
+        $("header").find("nav").append(\'<span class="myClass">  <b> Marmion Marine Values Mapper (Admin)</b> </span>\');
       })
      ')),
       
