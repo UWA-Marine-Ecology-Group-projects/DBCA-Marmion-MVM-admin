@@ -165,8 +165,14 @@ submitted.answers <- loadData("answers") %>% filter(!is.na(time)) %>%
   mutate(sec = str_sub(.$time, start = 5, end = 6)) %>%
   mutate(date = as.Date(paste(year, month, day, sep = "-"))) %>%
   left_join(days) %>%
-  dplyr::mutate(source = if_else(name %in% c("Peter Mccabe", "Bob lang", "David leadbeater", "Judith Massam"), "face", source)) %>%
-  dplyr::mutate(source = str_replace_all(.$source, "face2", "face")) %>%
+  dplyr::mutate(source = str_replace_all(.$source, c("tiny" = "Social media", 
+                                                     "email" = "Email",
+                                                     "CRC_SAGs" = "Community Reference Committee and Sector Advisory Groups",
+                                                     "face" = "Face to face",
+                                                     "MMP" = "Marmion Marine Park website"))) %>%
+  dplyr::mutate(origin = str_replace_all(.$origin, c("NoNoNoNo" = "No",
+                                                     "NoNoNo" = "No",
+                                                     "NoNo" = "No"))) %>%
   # filter(!source %in% c("NA", NA, "test")) %>% # TURN THIS OFF FOR TESTING
   glimpse()
 
@@ -177,6 +183,14 @@ submitted.polygons <- loadData("polygons") %>%
   semi_join(user.ids) %>%
   glimpse()
 
+# Create a metadata dataframe with all user info ---
+metadata <- submitted.answers %>% 
+  distinct(name, email, phone, residence, postcode, gender, age, frequency, visited, date, timezone, year, month, day, source, traditionalowner, origin, generalcomment, .keep_all = TRUE)
+
+small.metadata <- metadata %>%
+  dplyr::select(name, userID, source) %>%
+  distinct(name, source, .keep_all = TRUE)
+
 submitted.values <- loadData("values") %>%
   semi_join(user.ids) %>%
   mutate(value = str_replace_all(.$value, c("[^[:alnum:]]" = " ", 
@@ -185,34 +199,12 @@ submitted.values <- loadData("values") %>%
   left_join(sources) %>%
   glimpse() 
 
-# # # # data from googledrive
-# submitted.answers <- read_sheet("1Rn5sCqNFWJIIecQ3vpfdh3znVP6M2fcM0__FLmtSI54", sheet = 1) %>%
-#   filter(!is.na(time)) %>%
-#   separate(., time, into = c("date", "time"), sep = "-") %>%
-#   mutate(year = str_sub(.$date, start = 1, end = 4)) %>%
-#   mutate(month = str_sub(.$date, start = 5, end = 6)) %>%
-#   mutate(day = str_sub(.$date, start = 7, end = 8)) %>%
-#   mutate(hour = as.numeric(str_sub(.$time, start = 1, end = 2))) %>%
-#   mutate(hour = if_else(timezone %in%c("Etc.UTC"), hour + 8, hour)) %>%
-#   mutate(min = str_sub(.$time, start = 3, end = 4)) %>%
-#   mutate(sec = str_sub(.$time, start = 5, end = 6)) %>%
-#   mutate(date = as.Date(paste(year, month, day, sep = "-"))) %>%
-#   dplyr::rename(activity_or_value = activity.or.value) %>%
-#   left_join(days)
-# 
-# submitted.polygons <- read_sheet("1Rn5sCqNFWJIIecQ3vpfdh3znVP6M2fcM0__FLmtSI54", sheet = 2) %>%
-#   rename(number_of_times_clicked = number.of.times.clicked)
+submitted.answers <- submitted.answers %>% semi_join(small.metadata)
+submitted.polygons <- submitted.polygons %>% semi_join(small.metadata)
 
-list.of.users <- submitted.answers %>%
-  distinct(userID, name, email, phone, residence, postcode, gender, age, frequency, visited, date, timezone, time, year, month, day, source) %>%
-  dplyr::mutate(row.num = 1:nrow(.)) %>%
-  dplyr::select(userID, row.num)
-
-# Create a metadata dataframe with all user info ---
-metadata <- submitted.answers %>% 
-  distinct(name, email, phone, residence, postcode, gender, age, frequency, visited, date, timezone, year, month, day, source, .keep_all = TRUE)
-
-# double ups = SZMWOYIGLU850532135V and FGGUUUHUKO612539604J
+unique(submitted.values$userID)
+unique(submitted.answers$userID)
+unique(submitted.polygons$userID)
 
 aus <- metadata %>%
   filter(residence %in% c("Australia"))
@@ -239,16 +231,16 @@ local <- wa %>%
                          6038))
 
 socialmedia <- metadata %>%
-  filter(source == "socialmedia")
+  filter(source == "Social media")
 
 email <- metadata %>%
-  filter(source == "email")
+  filter(source == "Email")
 
 website <- metadata %>%
-  filter(source == "website")
+  filter(source == "Marmion Marine Park website")
 
-launch <- metadata %>%
-  filter(source == "launch")
+face <- metadata %>%
+  filter(source == "Face to face")
 
 test <- metadata %>%
   filter(source == "test")
@@ -264,6 +256,8 @@ selected.activities <- selected.all %>%
   dplyr::filter(activity_or_value %in% c("activity")) %>%
   left_join(activity.list) %>%
   glimpse()
+
+unique(selected.activities$userID)
 
 selected.values <- selected.all %>%
   dplyr::filter(activity_or_value %in% c("values")) %>%
@@ -306,7 +300,7 @@ selected.polygons.pressures <- left_join(submitted.polygons, selected.pressures)
 # Format data for downloading ----
 names(metadata)
 dl.user.metadata <- metadata %>%
-  dplyr::select(userID, name, email, phone, residence, postcode, gender, age, frequency, visited, source, date, time, timezone) %>%
+  dplyr::select(userID, name, email, phone, residence, postcode, gender, age, origin, traditionalowner, frequency, visited, generalcomment, source, date, time, timezone) %>%
   ga.clean.names()
 
 dl.all.polygons <- bind_rows(selected.polygons.activities, selected.polygons.values) %>%
