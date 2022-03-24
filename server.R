@@ -29,7 +29,7 @@ server = function(input, output, session) {
   
   output$sublevel <- renderUI({
     
-    req(input$sourceinput)
+    req(input$go)
     
     drop.activities <- selected.polygons.activities %>%
       filter(source %in% c(input$sourceinput))
@@ -63,7 +63,7 @@ server = function(input, output, session) {
   
   output$sublevelun <- renderUI({
     
-    req(input$sourceinput)
+    req(input$go)
     
     drop.activities <- selected.polygons.activities %>%
       filter(source %in% c(input$sourceinput))
@@ -99,7 +99,7 @@ server = function(input, output, session) {
   
   output$selectlk <- renderUI({
     
-    req(input$sourceinput)
+    req(input$go)
     
     drop.localknowledge <- selected.polygons.values %>%
       filter(source %in% c(input$sourceinput))
@@ -112,7 +112,7 @@ server = function(input, output, session) {
   
   output$selectpt <- renderUI({
     
-    req(input$sourceinput)
+    req(input$go)
     
     drop.pressures <- selected.polygons.pressures %>%
       filter(source %in% c(input$sourceinput)) %>%
@@ -157,13 +157,13 @@ server = function(input, output, session) {
   
   output$websitebox <- renderValueBox({
     valueBox(
-      paste0(nrow(website)), "Responses from website", icon = icon("chrome"), color = "teal"
+      paste0(nrow(website)), "Responses from Marmion Marine Park website", icon = icon("chrome"), color = "teal"
     )
   })
   
-  output$launchbox <- renderValueBox({
+  output$facebox <- renderValueBox({
     valueBox(
-      paste0(nrow(launch)), "Responses from launch", icon = icon("rocket"), color = "teal"
+      paste0(nrow(face)), "Responses from face to face surveys", icon = icon("users"), color = "teal"
     )
   })
   
@@ -190,10 +190,7 @@ server = function(input, output, session) {
     summarise.submitted <- metadata %>%
       group_by(source) %>%
       summarise(value = n()) %>%
-      replace_na(list(source = "Unknown")) %>%
-      dplyr::mutate(source = str_replace_all(.$source, c("face" = "Face to face", 
-                                                         "socialmedia" = "Social media",
-                                                         "CRC_SAGs" = "Community Reference Committee and Sector Advisory Groups")))
+      replace_na(list(source = "Unknown"))
     
     ggplot(summarise.submitted,
            aes(x = source, y = value)) +
@@ -209,7 +206,7 @@ server = function(input, output, session) {
   ## Submitted responses by category (Bar plot) ----
   output$submittedcategory <- renderPlot({
     
-    req(input$sourceinput)
+    req(input$go)
     
     summarise.submitted <- selected.activities %>%
       filter(source %in% c(input$sourceinput)) %>%
@@ -230,7 +227,7 @@ server = function(input, output, session) {
   ## Submitted responses by category (Pie chart) ----
   output$submittedpie <- renderPlot({
     
-    req(input$sourceinput)
+    req(input$go)
     
     summarise.submitted <- selected.activities %>%
       filter(source %in% c(input$sourceinput)) %>%
@@ -255,7 +252,7 @@ server = function(input, output, session) {
   ## Submitted responses by local knowledge (Bar chart) ----
   output$submittedvalues <- renderPlot({
     
-    req(input$sourceinput)
+    req(input$go)
     
     summarise.submitted <- selected.values %>%
       filter(source %in% c(input$sourceinput)) %>%
@@ -263,14 +260,15 @@ server = function(input, output, session) {
       summarise(value = n()) %>%
       filter(!nice.act %in% c(NA, "NA"))
     
+    colourCount = length(unique(summarise.submitted$nice.act))
+    
     ggplot(summarise.submitted, aes(x = nice.act, y = value, fill = nice.act)) +
       geom_bar(width = 1, stat = "identity", col = "black") +
-      scale_fill_brewer("Local Knowledge") +
+      scale_fill_manual(values = getPalette(colourCount), labels = function(x) str_wrap(x, width = 25))+
       xlab("Local Knowledge") +
       ylab("Number of responses") +
       Theme1 +
-      scale_y_continuous(expand = c(0, 0))+
-      #theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+      scale_y_continuous(expand = c(0, 0)) +
       scale_x_discrete(labels = function(x) str_wrap(x, width = 10))
     
   })
@@ -278,7 +276,7 @@ server = function(input, output, session) {
   ## Submitted responses by local knowledge (Pie chart) ----
   output$submittedvaluespie <- renderPlot({
     
-    req(input$sourceinput)
+    req(input$go)
     
     summarise.submitted <- selected.values %>%
       filter(source %in% c(input$sourceinput)) %>%
@@ -289,12 +287,14 @@ server = function(input, output, session) {
       mutate(ypos = cumsum(prop) - 0.5 * prop) %>%
       mutate(labels = paste (round(prop, digits = 1), "%", sep = ""))
     
+    colourCount = length(unique(summarise.submitted$nice.act))
+    
     ggplot(summarise.submitted, aes(x = "", y = prop, fill = nice.act)) +
       geom_bar(width = 1, stat = "identity", col = "black") +
       coord_polar("y", start = 0) +
       geom_text(aes(label = labels),
                 position = position_stack(vjust = 0.5)) +
-      scale_fill_brewer("Local Knowledge", labels = function(x) str_wrap(x, width = 25)) +
+      scale_fill_manual(values = getPalette(colourCount), labels = function(x) str_wrap(x, width = 25)) +
       Theme1 +
       blank_theme
   })
@@ -303,7 +303,7 @@ server = function(input, output, session) {
   ## Submitted responses by pressures and threats (Bar chart) ----
   output$submittedpressures <- renderPlot({
     
-    req(input$sourceinput)
+    req(input$go)
     
     summarise.submitted <- selected.pressures %>%
       filter(source %in% c(input$sourceinput)) %>%
@@ -311,14 +311,15 @@ server = function(input, output, session) {
       summarise(value = n()) %>%
       filter(!nice.sub %in% c(NA, "NA"))
     
+    colourCount = length(unique(summarise.submitted$nice.sub))
+    
     ggplot(summarise.submitted, aes(x = nice.sub, y = value, fill = nice.sub)) +
       geom_bar(width = 1, stat = "identity", col = "black") +
-      scale_fill_brewer("Local Knowledge") +
+      scale_fill_manual(values = getPalette(colourCount), labels = function(x) str_wrap(x, width = 25))+
       xlab("Pressures and Threats") +
       ylab("Number of responses") +
       Theme1 +
-      scale_y_continuous(expand = c(0, 0))+
-      #theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+      scale_y_continuous(expand = c(0, 0)) +
       scale_x_discrete(labels = function(x) str_wrap(x, width = 10))
     
   })
@@ -326,7 +327,7 @@ server = function(input, output, session) {
   ## Submitted responses by pressures and threats (Pie chart) ----
   output$submittedpressurespie <- renderPlot({
     
-    req(input$sourceinput)
+    req(input$go)
     
     summarise.submitted <- selected.pressures %>%
       filter(source %in% c(input$sourceinput)) %>%
@@ -337,6 +338,8 @@ server = function(input, output, session) {
       mutate(ypos = cumsum(prop) - 0.5 * prop) %>%
       mutate(labels = paste (round(prop, digits = 1), "%", sep = ""))
     
+    colourCount = length(unique(summarise.submitted$nice.sub))
+    
     ggplot(summarise.submitted, aes(x = "", y = prop, fill = nice.sub)) +
       geom_bar(width = 1, stat = "identity", col = "black") +
       coord_polar("y", start = 0) +
@@ -344,14 +347,14 @@ server = function(input, output, session) {
       geom_text(aes(label = labels),
                 position = position_stack(vjust = 0.5)) +
       Theme1 +
-      scale_fill_brewer("Local Knowledge", labels = function(x) str_wrap(x, width = 25)) +
+      scale_fill_manual(values = getPalette(colourCount), labels = function(x) str_wrap(x, width = 25)) +
       blank_theme
   })
   
   ## Submitted responses by gender ----
   output$submittedgender <- renderPlot({
     
-    req(input$sourceinput)
+    req(input$go)
     
     summarise.submitted <- metadata %>%
       filter(source %in% c(input$sourceinput)) %>%
@@ -372,7 +375,7 @@ server = function(input, output, session) {
   ## Submitted responses by age ----
   output$submittedage <- renderPlot({
     
-    req(input$sourceinput)
+    req(input$go)
     
     summarise.submitted <- metadata %>%
       filter(source %in% c(input$sourceinput)) %>%
@@ -392,7 +395,7 @@ server = function(input, output, session) {
   ## Submitted responses by residence ----
   output$submittedlocation <- renderPlot({
     
-    req(input$sourceinput)
+    req(input$go)
     
     summarise.submitted <- metadata %>%
       filter(source %in% c(input$sourceinput)) %>%
@@ -413,7 +416,7 @@ server = function(input, output, session) {
   ## Leaflet for all activities unweighted ----
   output$leafallunweighted <- renderLeaflet({
     
-    req(input$sourceinput)
+    req(input$go)
     
     polygons <- selected.polygons.activities
     
@@ -488,7 +491,7 @@ server = function(input, output, session) {
   ## Leaflet all activities weighted ----
   output$leafallweighted <- renderLeaflet({
     
-    req(input$sourceinput)
+    req(input$go)
     
     polygons <- selected.polygons.activities
     
@@ -978,7 +981,7 @@ server = function(input, output, session) {
   ## Leaflet postcodes ----
   output$leafpostcodes <- renderLeaflet({
     
-    req(input$sourceinput)
+    req(input$go)
     
     sum.postcodes <- metadata %>%
       filter(source %in% c(input$sourceinput)) %>%
@@ -1026,7 +1029,7 @@ server = function(input, output, session) {
   
   output$q9plot <- renderPlot({
     
-    req(input$sourceinput)
+    req(input$go)
     
     summarise.submitted <- submitted.values %>%
       filter(source %in% c(input$sourceinput)) %>%
@@ -1057,7 +1060,7 @@ server = function(input, output, session) {
 
   output$q10plot <- renderPlot({
     
-    req(input$sourceinput)
+    req(input$go)
     
     summarise.submitted <- submitted.values %>%
       filter(source %in% c(input$sourceinput)) %>%
@@ -1086,7 +1089,7 @@ server = function(input, output, session) {
   
   output$q11plot <- renderPlot({
     
-    req(input$sourceinput)
+    req(input$go)
     
     summarise.submitted <- submitted.values %>%
       filter(source %in% c(input$sourceinput)) %>%
@@ -1115,7 +1118,7 @@ server = function(input, output, session) {
   
   output$visitedplot <- renderPlot({
     
-    req(input$sourceinput)
+    req(input$go)
     
     summarise.submitted <- metadata %>%
       filter(source %in% c(input$sourceinput)) %>%
@@ -1141,7 +1144,7 @@ server = function(input, output, session) {
   
   output$awarenessplot <- renderPlot({
     
-    req(input$sourceinput)
+    req(input$go)
     
     summarise.submitted <- submitted.values %>%
       filter(source %in% c(input$sourceinput)) %>%
@@ -1192,6 +1195,190 @@ server = function(input, output, session) {
     content = function(con) {
       write.csv(dl.matrix, con, row.names = FALSE)
     }
+  )
+  
+  output$downloadactivityshp <- downloadHandler(
+    
+    filename = function() {
+      paste0("activities",
+             Sys.Date(),
+             '.zip')
+    }, content = function(file) {  
+      
+      shinyalert(
+        title = "Downloading...",
+        size = "s",
+        closeOnEsc = FALSE,
+        closeOnClickOutside = FALSE,
+        imageUrl = "https://cutewallpaper.org/21/loading-gif-transparent-background/Tag-For-Loading-Bar-Gif-Transparent-Loading-Gif-.gif",
+        html = FALSE,
+        showConfirmButton = FALSE,
+        timer = 0,
+        animation = FALSE
+      )
+      on.exit(shinyjs::runjs("swal.close();"))
+      
+      temp_directory <- file.path(tempdir(), as.integer(Sys.time()))
+      dir.create(temp_directory)
+      
+      polygon.id.list <-
+        data.frame(ID = as.character(c(1:(
+          length(SpP@polygons)
+        ))))
+      
+      for(i in unique(selected.activities$nice.title)){
+        
+        polygons.pressures <- selected.polygons.activities %>%
+          filter(nice.title == i) %>%
+          dplyr::group_by(id) %>%
+          dplyr::summarise(total.clicks = n()) %>%
+          dplyr::rename(ID = id) %>%
+          dplyr::mutate(ID = as.character(ID)) %>%
+          dplyr::ungroup() %>%
+          dplyr::full_join(polygon.id.list) %>%
+          tidyr::replace_na(list(total.clicks = 0)) %>%
+          mutate(ID = as.numeric(ID)) %>%
+          arrange(ID) %>%
+          dplyr::mutate(ID = as.character(ID))
+        
+        pressures.shp <- SpatialPolygonsDataFrame(SpP, data = polygons.pressures, match.ID = FALSE)
+        
+        fileName <- str_replace_all(i, c("-" = ".", "[^[:alnum:]]" = "_", "_e_g__4WD__" = ""))
+        
+        fileName <- paste(fileName, ".shp", sep = "")
+        
+        writeSpatialShape(pressures.shp, file.path(temp_directory, fileName))
+        
+        
+      }
+      
+      #create the zip file
+      zip::zip(zipfile = file, files = dir(temp_directory), root = temp_directory)
+      
+    }, contentType = "application/zip"
+  )
+  
+  output$downloadvalueshp <- downloadHandler(
+    
+    filename = function() {
+      paste0("values",
+             Sys.Date(),
+             '.zip')
+    }, content = function(file) {  
+      
+      shinyalert(
+        title = "Downloading...",
+        size = "s",
+        closeOnEsc = FALSE,
+        closeOnClickOutside = FALSE,
+        imageUrl = "https://cutewallpaper.org/21/loading-gif-transparent-background/Tag-For-Loading-Bar-Gif-Transparent-Loading-Gif-.gif",
+        html = FALSE,
+        showConfirmButton = FALSE,
+        timer = 0,
+        animation = FALSE
+      )
+      on.exit(shinyjs::runjs("swal.close();"))
+      
+      temp_directory <- file.path(tempdir(), as.integer(Sys.time()))
+      dir.create(temp_directory)
+      
+      polygon.id.list <-
+        data.frame(ID = as.character(c(1:(
+          length(SpP@polygons)
+        ))))
+      
+      for(i in unique(selected.values$nice.title)){
+        
+        polygons.pressures <- selected.polygons.values %>%
+          filter(nice.title == i) %>%
+          dplyr::group_by(id) %>%
+          dplyr::summarise(total.clicks = n()) %>%
+          dplyr::rename(ID = id) %>%
+          dplyr::mutate(ID = as.character(ID)) %>%
+          dplyr::ungroup() %>%
+          dplyr::full_join(polygon.id.list) %>%
+          tidyr::replace_na(list(total.clicks = 0)) %>%
+          mutate(ID = as.numeric(ID)) %>%
+          arrange(ID) %>%
+          dplyr::mutate(ID = as.character(ID))
+        
+        pressures.shp <- SpatialPolygonsDataFrame(SpP, data = polygons.pressures, match.ID = FALSE)
+        
+        fileName <- str_replace_all(i, c("-" = ".", "[^[:alnum:]]" = "_", "_e_g__4WD__" = ""))
+        
+        fileName <- paste(fileName, ".shp", sep = "")
+        
+        writeSpatialShape(pressures.shp, file.path(temp_directory, fileName))
+        
+        
+      }
+      
+      #create the zip file
+      zip::zip(zipfile = file, files = dir(temp_directory), root = temp_directory)
+      
+    }, contentType = "application/zip"
+  )
+  
+  
+  output$downloadpressureshp <- downloadHandler(
+    
+    filename = function() {
+      paste0("pressures_",
+             Sys.Date(),
+             '.zip')
+    }, content = function(file) {  
+      
+      shinyalert(
+        title = "Downloading...",
+        size = "s",
+        closeOnEsc = FALSE,
+        closeOnClickOutside = FALSE,
+        imageUrl = "https://cutewallpaper.org/21/loading-gif-transparent-background/Tag-For-Loading-Bar-Gif-Transparent-Loading-Gif-.gif",
+        html = FALSE,
+        showConfirmButton = FALSE,
+        timer = 0,
+        animation = FALSE
+      )
+      on.exit(shinyjs::runjs("swal.close();"))
+      
+      temp_directory <- file.path(tempdir(), as.integer(Sys.time()))
+      dir.create(temp_directory)
+      
+      polygon.id.list <-
+        data.frame(ID = as.character(c(1:(
+          length(SpP@polygons)
+        ))))
+      
+      for(i in unique(selected.pressures$nice.title)){
+        
+        polygons.pressures <- selected.polygons.pressures %>%
+          filter(nice.title == i) %>%
+          dplyr::group_by(id) %>%
+          dplyr::summarise(total.clicks = n()) %>%
+          dplyr::rename(ID = id) %>%
+          dplyr::mutate(ID = as.character(ID)) %>%
+          dplyr::ungroup() %>%
+          dplyr::full_join(polygon.id.list) %>%
+          tidyr::replace_na(list(total.clicks = 0)) %>%
+          mutate(ID = as.numeric(ID)) %>%
+          arrange(ID) %>%
+          dplyr::mutate(ID = as.character(ID))
+        
+        pressures.shp <- SpatialPolygonsDataFrame(SpP, data = polygons.pressures, match.ID = FALSE)
+        
+        fileName <- str_replace_all(i, c("-" = ".", "[^[:alnum:]]" = "_", "_e_g__4WD__" = ""))
+        
+        fileName <- paste(fileName, ".shp", sep = "")
+        
+        writeSpatialShape(pressures.shp, file.path(temp_directory, fileName))
+        
+        
+      }
+      
+      #create the zip file
+      zip::zip(zipfile = file, files = dir(temp_directory), root = temp_directory)
+      
+    }, contentType = "application/zip"
   )
   
 }
