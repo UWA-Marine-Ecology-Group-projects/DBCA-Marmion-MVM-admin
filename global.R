@@ -118,8 +118,7 @@ activity.list <- activities %>%
   dplyr::mutate(activity = tolower(stringr::str_replace_all(.$Activity, c("," = "", "[^[:alnum:]]" = "_", "___" = "_", "__" = "_", "\\_$" = "")))) %>%
   
   dplyr::mutate(nice.sub.dropdown = paste(nice.cat, nice.sub, sep = " - ")) %>%
-  dplyr::mutate(nice.act.dropdown = paste(nice.cat, nice.sub, nice.act, sep = " - ")) %>%           
-  glimpse()
+  dplyr::mutate(nice.act.dropdown = paste(nice.cat, nice.sub, nice.act, sep = " - "))
 
 other.list <- activities %>%
   dplyr::mutate(nice.title = paste(Category, Sub.category, sep = " - "),
@@ -127,8 +126,7 @@ other.list <- activities %>%
                 nice.act = Sub.category) %>%
   dplyr::filter(Category %in% c("Other")) %>%
   dplyr::mutate(Category = stringr::str_replace_all(.$Category, c("," = "", "[^[:alnum:]]" = "_", "___" = "_", "__" = "_"))) %>%
-  dplyr::mutate(Sub.category = stringr::str_replace_all(.$Sub.category, c("," = "", "[^[:alnum:]]" = "_", "___" = "_", "__" = "_"))) %>%
-  glimpse()
+  dplyr::mutate(Sub.category = stringr::str_replace_all(.$Sub.category, c("," = "", "[^[:alnum:]]" = "_", "___" = "_", "__" = "_")))
 
 values.list <- activities %>%
   dplyr::mutate(nice.title = paste(Category, Sub.category, sep = " - "),
@@ -136,8 +134,7 @@ values.list <- activities %>%
                 nice.act = Sub.category) %>%
   dplyr::filter(Category %in% c("Local knowledge")) %>%
   dplyr::mutate(category = tolower(stringr::str_replace_all(.$Category, c("," = "", "[^[:alnum:]]" = "_", "___" = "_", "__" = "_", "\\_$" = "")))) %>%
-  dplyr::mutate(subcategory = tolower(stringr::str_replace_all(.$Sub.category, c("," = "", "[^[:alnum:]]" = "_", "___" = "_","__" = "_",  "\\_$" = "")))) %>%
-  glimpse()
+  dplyr::mutate(subcategory = tolower(stringr::str_replace_all(.$Sub.category, c("," = "", "[^[:alnum:]]" = "_", "___" = "_","__" = "_",  "\\_$" = ""))))
 
 pressures.list <- activities %>%
   dplyr::mutate(nice.title = paste(Category, Sub.category,Activity, sep = " - "),
@@ -150,8 +147,7 @@ pressures.list <- activities %>%
   dplyr::mutate(activity = tolower(stringr::str_replace_all(.$Activity, c("," = "", "[^[:alnum:]]" = "_", "___" = "_", "__" = "_", "\\_$" = "")))) %>%
   
   dplyr::mutate(nice.sub.dropdown = paste(nice.cat, nice.sub, sep = " - ")) %>%
-  dplyr::mutate(nice.act.dropdown = paste(nice.cat, nice.sub, nice.act, sep = " - ")) %>%           
-  glimpse()
+  dplyr::mutate(nice.act.dropdown = paste(nice.cat, nice.sub, nice.act, sep = " - "))
 
 ## Read in data from mongo ----
 submitted.answers <- loadData("answers") %>% filter(!is.na(time)) %>%
@@ -179,32 +175,28 @@ submitted.answers <- loadData("answers") %>% filter(!is.na(time)) %>%
 user.ids <- submitted.answers %>% distinct(userID)
 sources  <- submitted.answers %>% distinct(userID, source)
 
+# Create a metadata data frame with all user info ---
+userID.metadata <- submitted.answers %>% 
+  distinct(name, email, phone, residence, postcode, gender, age, frequency, visited, date, timezone, year, month, day, source, traditionalowner, origin, generalcomment, userID)
+
+metadata <- submitted.answers %>% 
+  distinct(name, email, phone, residence, postcode, gender, age, frequency, visited, date, timezone, year, month, day, source, traditionalowner, origin, generalcomment)
+
+# Now read in polygons and values and add metadata ----
 submitted.polygons <- loadData("polygons") %>% 
-  semi_join(user.ids) %>%
+  left_join(userID.metadata) %>%
+  dplyr::select(-c(userID, time, timezone)) %>%
+  distinct() %>%
   glimpse()
 
-# Create a metadata dataframe with all user info ---
-metadata <- submitted.answers %>% 
-  distinct(name, email, phone, residence, postcode, gender, age, frequency, visited, date, timezone, year, month, day, source, traditionalowner, origin, generalcomment, .keep_all = TRUE)
-
-small.metadata <- metadata %>%
-  dplyr::select(name, userID, source) %>%
-  distinct(name, source, .keep_all = TRUE)
-
 submitted.values <- loadData("values") %>%
-  semi_join(user.ids) %>%
   mutate(value = str_replace_all(.$value, c("[^[:alnum:]]" = " ", 
                                             "The current level of protection and management guarantee conservation" = 
                                               "The current level of protection and management of marine areas in the South Coast is sufficient to guarantee conservation of marine ecosystems"))) %>% 
-  left_join(sources) %>%
+  left_join(userID.metadata) %>%
+  dplyr::select(-c(userID)) %>%
+  distinct() %>%
   glimpse() 
-
-submitted.answers <- submitted.answers %>% semi_join(small.metadata)
-submitted.polygons <- submitted.polygons %>% semi_join(small.metadata)
-
-unique(submitted.values$userID)
-unique(submitted.answers$userID)
-unique(submitted.polygons$userID)
 
 aus <- metadata %>%
   filter(residence %in% c("Australia"))
@@ -247,8 +239,8 @@ test <- metadata %>%
 
 # Create a dataframe for all activities and values selected ----
 selected.all <- submitted.answers %>%
-  distinct(name, email, phone, residence, postcode, gender, age, frequency, visited, date, timezone, year, month, day, source, activity_or_value, category, subcategory, activity, description, days, Summer, Autumn, Winter, Spring, .keep_all = TRUE) %>%
-  dplyr::select(-c(name, email, phone, residence, postcode, gender, age, frequency, visited, date, time, timezone, year, month, day, hour, min, sec)) %>%
+  dplyr::select(-c(userID)) %>%
+  distinct() %>%
   glimpse()
 
 # Split into activities, values and pressures ----
@@ -256,8 +248,6 @@ selected.activities <- selected.all %>%
   dplyr::filter(activity_or_value %in% c("activity")) %>%
   left_join(activity.list) %>%
   glimpse()
-
-unique(selected.activities$userID)
 
 selected.values <- selected.all %>%
   dplyr::filter(activity_or_value %in% c("values")) %>%
@@ -273,44 +263,41 @@ selected.pressures <- selected.all %>%
 
 # split selected polygons into activities and values 
 selected.polygons.activities <- left_join(submitted.polygons, selected.activities) %>%
-  dplyr::select(-c(time, timezone, number_of_times_clicked)) %>%
   dplyr::filter(activity_or_value %in% c("activity")) %>%
   filter(!is.na(nice.cat)) %>%
   filter(mean > 0) %>%
   glimpse()
 
 total.polygons.clicked.per.activity.user <- selected.polygons.activities %>%
-  distinct(userID, mean, id, nice.cat, nice.sub, nice.act) %>%
-  dplyr::group_by(userID, mean, nice.cat, nice.sub, nice.act) %>%
+  distinct(name, email, phone, mean, id, nice.cat, nice.sub, nice.act) %>%
+  dplyr::group_by(name, email, phone, mean, nice.cat, nice.sub, nice.act) %>%
   dplyr::summarise(total.cells.clicked = n()) %>%
   mutate(weighted.score = mean / total.cells.clicked)
 
 selected.polygons.activities <- left_join(selected.polygons.activities, total.polygons.clicked.per.activity.user)
 
 selected.polygons.values <- left_join(submitted.polygons, selected.values) %>%
-  dplyr::select(-c(time, timezone, number_of_times_clicked)) %>%
   dplyr::filter(activity_or_value %in% c("values")) %>%
   filter(!is.na(nice.cat))
 
 selected.polygons.pressures <- left_join(submitted.polygons, selected.pressures) %>%
-  dplyr::select(-c(time, timezone, number_of_times_clicked)) %>%
   dplyr::filter(activity_or_value %in% c("pressures")) %>%
   filter(!is.na(nice.cat))
 
 # Format data for downloading ----
 names(metadata)
 dl.user.metadata <- metadata %>%
-  dplyr::select(userID, name, email, phone, residence, postcode, gender, age, origin, traditionalowner, frequency, visited, generalcomment, source, date, time, timezone) %>%
+  dplyr::select(name, email, phone, residence, postcode, gender, age, origin, traditionalowner, frequency, visited, generalcomment, source, date) %>%
   ga.clean.names()
 
-dl.all.polygons <- bind_rows(selected.polygons.activities, selected.polygons.values) %>%
+dl.all.polygons <- bind_rows(selected.polygons.activities, selected.polygons.values, selected.polygons.pressures) %>%
   dplyr::mutate(activity.or.knowledge = str_replace_all(.$activity_or_value, c("values" = "knowledge"))) %>%
-  dplyr::select(userID, activity.or.knowledge, Category, Sub.category, Activity, description, days, mean, Summer, Autumn, Winter, Spring, id) %>%
+  dplyr::select(name, email, phone, activity.or.knowledge, Category, Sub.category, Activity, description, days, mean, Summer, Autumn, Winter, Spring, id) %>%
   ga.clean.names()
 
 dl.matrix <- submitted.values %>%
   ga.clean.names()%>%
-  dplyr::select(userid, value, response)
+  dplyr::select(name, email, phone, value, response)
 
 ## Themes ----
 Theme1 <-    theme_bw()+
@@ -541,3 +528,4 @@ create_dropdown <- function(input_name, choices, label) {
 }
 
 getPalette = colorRampPalette(brewer.pal(9, "Blues"))
+
