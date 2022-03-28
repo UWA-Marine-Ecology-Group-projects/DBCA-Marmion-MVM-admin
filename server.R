@@ -127,7 +127,7 @@ server = function(input, output, session) {
   ## Value boxes ----
   output$totalbox <- renderValueBox({
     valueBox(
-      paste0(length(unique(metadata$userID))), "Total responses", icon = icon("users"), color = "blue"
+      paste0(length(unique(metadata$name))), "Total responses", icon = icon("users"), color = "blue"
     )
   })
   
@@ -1148,10 +1148,11 @@ server = function(input, output, session) {
     
     summarise.submitted <- submitted.values %>%
       filter(source %in% c(input$sourceinput)) %>%
+      distinct(value, response, name, email) %>%
+      filter(!is.na(response)) %>%
       dplyr::filter(value == "Please rate your level of understanding of what a marine parks is ") %>%
       dplyr::group_by(response) %>%
       dplyr::summarise(value = n()) %>%
-      filter(!is.na(response)) %>%
       mutate(response = fct_relevel(.$response, "Not at all aware", "Slightly aware", "Somewhat aware", "Moderately aware", "Extremely aware"))
     
     colourCount = length(unique(summarise.submitted$response))
