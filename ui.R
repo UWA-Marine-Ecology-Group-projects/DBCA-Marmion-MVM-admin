@@ -141,13 +141,21 @@ h3 {
                   box(width = 12,
                       title = "Filter data by source:",
                       status = "primary",
-                      uiOutput("sourceui"),
-                      actionButton("go", "Start plotting!")),
+                      uiOutput("sourceui")),
+                  
+                  div(style="display:inline-block;width:100%;text-align: center;", 
+                      actionBttn("go",
+                                 "start plotting!",
+                                 style = "unite",
+                                 color = "primary")),
+                  
+                  br(), br(),
+                  
                   
                   box(width = 12,
                       title = "Users by postcode:",
                       status = "primary",
-                  leafglOutput("leafpostcodes", width = "100%", height = 670)),
+                      withSpinner(leafglOutput("leafpostcodes", width = "100%", height = 670))),
                   
                   box(width = 12,
                       title = "Demographics:",
