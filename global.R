@@ -180,7 +180,7 @@ userID.metadata <- submitted.answers %>%
   distinct(name, email, phone, residence, postcode, gender, age, frequency, visited, date, timezone, year, month, day, source, traditionalowner, origin, generalcomment, userID)
 
 metadata <- submitted.answers %>% 
-  distinct(name, email, phone, residence, postcode, gender, age, frequency, visited, date, timezone, year, month, day, source, traditionalowner, origin, generalcomment)
+  distinct(name, email, phone, residence, postcode, gender, age, frequency, visited, awaremarmionmarinepark, fishinginsanctuary, recreationinsanctuary, date, timezone, year, month, day, source, traditionalowner, origin, generalcomment)
 
 # Now read in polygons and values and add metadata ----
 submitted.polygons <- loadData("polygons") %>% 
@@ -287,7 +287,7 @@ selected.polygons.pressures <- left_join(submitted.polygons, selected.pressures)
 # Format data for downloading ----
 names(metadata)
 dl.user.metadata <- metadata %>%
-  dplyr::select(name, email, phone, residence, postcode, gender, age, origin, traditionalowner, frequency, visited, generalcomment, source, date) %>%
+  dplyr::select(name, email, phone, residence, postcode, gender, age, origin, traditionalowner, frequency, visited, awaremarmionmarinepark, fishinginsanctuary, recreationinsanctuary, generalcomment, source, date) %>%
   ga.clean.names()
 
 dl.all.polygons <- bind_rows(selected.polygons.activities, selected.polygons.values, selected.polygons.pressures) %>%

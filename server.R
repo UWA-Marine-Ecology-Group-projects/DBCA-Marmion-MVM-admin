@@ -1169,6 +1169,84 @@ server = function(input, output, session) {
     
   })
   
+  # Aware marmion is a marine park
+  output$awaremarmionmarineparkplot <- renderPlot({
+    
+    req(input$go)
+    
+    summarise.submitted <- metadata %>%
+      filter(source %in% c(input$sourceinput)) %>%
+      dplyr::group_by(awaremarmionmarinepark) %>%
+      dplyr::summarise(value = n()) %>%
+      filter(!is.na(awaremarmionmarinepark)) %>%
+      mutate(awaremarmionmarinepark = fct_relevel(.$awaremarmionmarinepark, "Yes", "No", "Unsure"))
+    
+    colourCount = length(unique(summarise.submitted$awaremarmionmarinepark))
+    
+    ggplot(summarise.submitted,
+           aes(x = awaremarmionmarinepark, y = value, fill = awaremarmionmarinepark)) +
+      geom_bar(width = 1, stat = "identity", col = "black") +
+      ylab("Number of responses") +
+      xlab("Response") +
+      ggtitle(paste(strwrap("Were you aware that Marmion is a Marine Park?", width = 90), collapse ="\n")) +
+      Theme1 +
+      scale_fill_manual(values = getPalette(colourCount))+
+      scale_y_continuous(expand = c(0, 0))
+    
+  })
+  
+  # Fishing in sanctuary zones
+  output$fishinginsanctuaryplot <- renderPlot({
+    
+    req(input$go)
+    
+    summarise.submitted <- metadata %>%
+      filter(source %in% c(input$sourceinput)) %>%
+      dplyr::group_by(fishinginsanctuary) %>%
+      dplyr::summarise(value = n()) %>%
+      filter(!is.na(fishinginsanctuary)) %>%
+      mutate(fishinginsanctuary = fct_relevel(.$fishinginsanctuary, "Yes", "No", "Unsure"))
+    
+    colourCount = length(unique(summarise.submitted$fishinginsanctuary))
+    
+    ggplot(summarise.submitted,
+           aes(x = fishinginsanctuary, y = value, fill = fishinginsanctuary)) +
+      geom_bar(width = 1, stat = "identity", col = "black") +
+      ylab("Number of responses") +
+      xlab("Response") +
+      ggtitle(paste(strwrap("Is recreation fishing permitted in the sanctuary zones?", width = 90), collapse ="\n")) +
+      Theme1 +
+      scale_fill_manual(values = getPalette(colourCount))+
+      scale_y_continuous(expand = c(0, 0))
+    
+  })
+  
+  # Recreation in sanctuary
+  output$recreationinsanctuaryplot <- renderPlot({
+    
+    req(input$go)
+    
+    summarise.submitted <- metadata %>%
+      filter(source %in% c(input$sourceinput)) %>%
+      dplyr::group_by(recreationinsanctuary) %>%
+      dplyr::summarise(value = n()) %>%
+      filter(!is.na(recreationinsanctuary)) %>%
+      mutate(recreationinsanctuary = fct_relevel(.$recreationinsanctuary, "Yes", "No", "Unsure"))
+    
+    colourCount = length(unique(summarise.submitted$recreationinsanctuary))
+    
+    ggplot(summarise.submitted,
+           aes(x = recreationinsanctuary, y = value, fill = recreationinsanctuary)) +
+      geom_bar(width = 1, stat = "identity", col = "black") +
+      ylab("Number of responses") +
+      xlab("Response") +
+      ggtitle(paste(strwrap("Are boating, diving and snorkelling permitted in the sanctuary zones?", width = 90), collapse ="\n")) +
+      Theme1 +
+      scale_fill_manual(values = getPalette(colourCount))+
+      scale_y_continuous(expand = c(0, 0))
+    
+  })
+  
   
   # Download data ----
   output$downloadmetadata <- downloadHandler(

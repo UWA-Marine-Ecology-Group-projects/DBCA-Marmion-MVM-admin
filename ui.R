@@ -239,10 +239,16 @@ h3 {
                   box(width = 12,
                       title = "Average response to matrix questions:",
                       status = "primary",
-                      splitLayout(cellWidths = c("33%", "33%", "33%"),
+                      splitLayout(cellWidths = c("66%",  "33%"),
                                   withSpinner(plotOutput("awarenessplot")),
-                                  withSpinner(plotOutput("visitedplot")),
                                   withSpinner(plotOutput("q9plot"))),
+                      
+                      splitLayout(cellWidths = c("25%", "25%", "25%", "25%"),
+                                  withSpinner(plotOutput("visitedplot")),
+                                  withSpinner(plotOutput("awaremarmionmarineparkplot")),
+                                  withSpinner(plotOutput("fishinginsanctuaryplot")),
+                                  withSpinner(plotOutput("recreationinsanctuaryplot"))),
+                      
                       splitLayout(cellWidths = c("50%", "50%"),
                                   withSpinner(plotOutput("q10plot")),
                                   withSpinner(plotOutput("q11plot")))),
