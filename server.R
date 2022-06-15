@@ -127,7 +127,7 @@ server = function(input, output, session) {
   ## Value boxes ----
   output$totalbox <- renderValueBox({
     valueBox(
-      paste0(length(unique(metadata$name))), "Total responses", icon = icon("users"), color = "blue"
+      paste0(nrow(metadata)), "Total responses", icon = icon("users"), color = "blue"
     )
   })
   
@@ -171,6 +171,7 @@ server = function(input, output, session) {
   output$submitteddate <- renderPlot({
     
     summarise.submitted <- metadata %>%
+      distinct(name, email, phone, source, date) %>%
       group_by(date) %>%
       summarise(value = n())
     
@@ -188,6 +189,7 @@ server = function(input, output, session) {
   output$submittedsource <- renderPlot({
     
     summarise.submitted <- metadata %>%
+      distinct(name, email, phone, source) %>%
       group_by(source) %>%
       summarise(value = n()) %>%
       replace_na(list(source = "Unknown"))
@@ -357,6 +359,7 @@ server = function(input, output, session) {
     req(input$go)
     
     summarise.submitted <- metadata %>%
+      distinct(name, email, phone, source, gender) %>%
       filter(source %in% c(input$sourceinput)) %>%
       dplyr::group_by(gender) %>%
       dplyr::summarise(value = n())
@@ -378,6 +381,7 @@ server = function(input, output, session) {
     req(input$go)
     
     summarise.submitted <- metadata %>%
+      distinct(name, email, phone, source, age) %>%
       filter(source %in% c(input$sourceinput)) %>%
       dplyr::group_by(age) %>%
       dplyr::summarise(value = n())
@@ -398,6 +402,7 @@ server = function(input, output, session) {
     req(input$go)
     
     summarise.submitted <- metadata %>%
+      distinct(name, email, phone, source, residence) %>%
       filter(source %in% c(input$sourceinput)) %>%
       dplyr::group_by(residence) %>%
       dplyr::summarise(value = n())
@@ -984,6 +989,7 @@ server = function(input, output, session) {
     req(input$go)
     
     sum.postcodes <- metadata %>%
+      distinct(name, email, phone, source, postcode) %>%
       filter(source %in% c(input$sourceinput)) %>%
       group_by(postcode) %>%
       summarise(total.responses = n())
@@ -1121,6 +1127,7 @@ server = function(input, output, session) {
     req(input$go)
     
     summarise.submitted <- metadata %>%
+      distinct(name, email, phone, source, visited) %>%
       filter(source %in% c(input$sourceinput)) %>%
       dplyr::group_by(visited) %>%
       dplyr::summarise(value = n()) %>%
@@ -1175,6 +1182,7 @@ server = function(input, output, session) {
     req(input$go)
     
     summarise.submitted <- metadata %>%
+      distinct(name, email, phone, source, awaremarmionmarinepark) %>%
       filter(source %in% c(input$sourceinput)) %>%
       dplyr::group_by(awaremarmionmarinepark) %>%
       dplyr::summarise(value = n()) %>%
@@ -1201,6 +1209,7 @@ server = function(input, output, session) {
     req(input$go)
     
     summarise.submitted <- metadata %>%
+      distinct(name, email, phone, source, fishinginsanctuary) %>%
       filter(source %in% c(input$sourceinput)) %>%
       dplyr::group_by(fishinginsanctuary) %>%
       dplyr::summarise(value = n()) %>%
@@ -1227,6 +1236,7 @@ server = function(input, output, session) {
     req(input$go)
     
     summarise.submitted <- metadata %>%
+      distinct(name, email, phone, source, recreationinsanctuary) %>%
       filter(source %in% c(input$sourceinput)) %>%
       dplyr::group_by(recreationinsanctuary) %>%
       dplyr::summarise(value = n()) %>%
