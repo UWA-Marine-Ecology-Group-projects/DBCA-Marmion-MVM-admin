@@ -161,15 +161,15 @@ submitted.answers <- loadData("answers") %>% filter(!is.na(time)) %>%
   mutate(sec = str_sub(.$time, start = 5, end = 6)) %>%
   mutate(date = as.Date(paste(year, month, day, sep = "-"))) %>%
   left_join(days) %>%
-  dplyr::mutate(source = str_replace_all(.$source, c("tiny" = "Social media", 
+  dplyr::mutate(source = str_replace_all(.$source, c("socials" = "Social media", 
                                                      "email" = "Email",
                                                      "CRC_SAGs" = "Community Reference Committee and Sector Advisory Groups",
-                                                     "face" = "Face to face",
+                                                     "face2" = "Face to face",
                                                      "MMP" = "Marmion Marine Park website"))) %>%
   dplyr::mutate(origin = str_replace_all(.$origin, c("NoNoNoNo" = "No",
                                                      "NoNoNo" = "No",
                                                      "NoNo" = "No"))) %>%
-  # filter(!source %in% c("NA", NA, "test")) %>% # TURN THIS OFF FOR TESTING
+  filter(!source %in% c("NA", NA, "test")) %>% # TURN THIS OFF FOR TESTING
   glimpse()
 
 user.ids <- submitted.answers %>% distinct(userID)
@@ -186,8 +186,11 @@ metadata <- submitted.answers %>%
 submitted.polygons <- loadData("polygons") %>% 
   left_join(userID.metadata) %>%
   dplyr::select(-c(userID, time, timezone)) %>%
-  distinct() %>%
+  dplyr::filter(!is.na(name)) %>%
+  distinct(category, subcategory, activity, id, number_of_times_clicked, name, email, phone, residence, postcode, gender, age, frequency, visited, source) %>%
   glimpse()
+
+names(submitted.polygons)
 
 submitted.values <- loadData("values") %>%
   mutate(value = str_replace_all(.$value, c("[^[:alnum:]]" = " ", 
@@ -199,6 +202,7 @@ submitted.values <- loadData("values") %>%
   glimpse() 
 
 aus <- metadata %>%
+  distinct(name, email, phone, postcode, residence, source) %>%
   filter(residence %in% c("Australia"))
 
 wa <- aus %>%
@@ -239,7 +243,7 @@ test <- metadata %>%
 
 # Create a dataframe for all activities and values selected ----
 selected.all <- submitted.answers %>%
-  dplyr::select(-c(userID)) %>%
+  dplyr::select(-c(userID, time, min, sec)) %>%
   distinct() %>%
   glimpse()
 
