@@ -127,7 +127,7 @@ h3 {
                   valueBoxOutput("localbox"),
                   
                   valueBoxOutput("socialbox", width = 3),
-                  valueBoxOutput("emailbox", width = 3),
+                  valueBoxOutput("crcbox", width = 3),
                   valueBoxOutput("websitebox", width = 3),
                   valueBoxOutput("facebox", width = 3),
                   

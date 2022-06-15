@@ -165,7 +165,8 @@ submitted.answers <- loadData("answers") %>% filter(!is.na(time)) %>%
                                                      "email" = "Email",
                                                      "CRC_SAGs" = "Community Reference Committee and Sector Advisory Groups",
                                                      "face2" = "Face to face",
-                                                     "MMP" = "Marmion Marine Park website"))) %>%
+                                                     "MMP" = "Marmion Marine Park website",
+                                                     "web" = "Marmion Marine Park website"))) %>%
   dplyr::mutate(origin = str_replace_all(.$origin, c("NoNoNoNo" = "No",
                                                      "NoNoNo" = "No",
                                                      "NoNo" = "No"))) %>%
@@ -195,7 +196,7 @@ names(submitted.polygons)
 submitted.values <- loadData("values") %>%
   mutate(value = str_replace_all(.$value, c("[^[:alnum:]]" = " ", 
                                             "The current level of protection and management guarantee conservation" = 
-                                              "The current level of protection and management of marine areas in the South Coast is sufficient to guarantee conservation of marine ecosystems"))) %>% 
+                                              "The current level of protection and management of marine areas between Trigg and Two Rocks is sufficient to guarantee conservation of marine ecosystems"))) %>% 
   left_join(userID.metadata) %>%
   dplyr::select(-c(userID)) %>%
   distinct() %>%
@@ -229,8 +230,8 @@ local <- wa %>%
 socialmedia <- metadata %>%
   filter(source == "Social media")
 
-email <- metadata %>%
-  filter(source == "Email")
+crc <- metadata %>%
+  filter(source == "Community Reference Committee and Sector Advisory Groups")
 
 website <- metadata %>%
   filter(source == "Marmion Marine Park website")

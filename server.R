@@ -149,9 +149,9 @@ server = function(input, output, session) {
     )
   })
   
-  output$emailbox <- renderValueBox({
+  output$crcbox <- renderValueBox({
     valueBox(
-      paste0(nrow(email)), "Responses from email", icon = icon("envelope"), color = "teal"
+      paste0(nrow(crc)), "Responses from CRC and SAG", icon = icon("envelope"), color = "teal"
     )
   })
   
